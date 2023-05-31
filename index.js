@@ -67,6 +67,8 @@ let addEmployee = () => {
           managerName,
         } = answers;
 
+        let empID = answers.length;
+
         let newRole;
 
         for (var i = 0; i < data.length; i++) {
@@ -76,15 +78,11 @@ let addEmployee = () => {
         }
 
         db.query(
-          `INSERT INTO employee (FirstName, LastName, RoleID, ManagerID) VALUES (${firstname}, ${lastname}, ${role}, ${managerName})`,
-          (err, result) => {
-            if (err) return err;
-            
-            console.log(result);
-            init();
+          `INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (${empID},${firstname}, ${lastname}, ${newRole}, ${managerName})`)
+        init();
     
-          }
-        );
+          
+      
       });
   });
 };
@@ -212,7 +210,7 @@ let addDep = () => {
       }
     ])
     .then((data) => {
-      db.query(`INSERT INTO department (DepartmentName) VALUES (?)`,[data.departmentName],(err, results) => {
+      db.query(`INSERT INTO department (DepartmentName) VALUES (${data.departmentName})`,(err, results) => {
           if(err) return err;
           console.log(results);
           init();
