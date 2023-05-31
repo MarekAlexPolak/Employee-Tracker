@@ -1,4 +1,4 @@
-
+//Importing libraries
 const inquirer = require("inquirer"); 
 const express = require('express');
 const mysql = require('mysql2');
@@ -17,7 +17,7 @@ const db = mysql.createConnection(
 
 express().use(express.urlencoded({ extended: false }));
 express().use(express.json());
-
+//function to view employeed table
 let viewEmployee = () => {
   db.query("SELECT * FROM employee", function (err, results) {
     if (err) return err;
@@ -25,16 +25,17 @@ let viewEmployee = () => {
     init();
   });
 };
-
+//function to add employee to employees table
 let addEmployee = () => {
-
+//getting data from roles table
   db.query("SELECT * FROM role", (err, data) => {
     if (err)  return err;
+    //creating array of options for roles
     let x = []
-    console.log(data);
     for (let i = 0; i < data.length; i++) {
       x[i] = (data[i].title);
     }
+    //user input for new employee
     inquirer.prompt([
       {
         type: "input",
@@ -76,7 +77,7 @@ let addEmployee = () => {
             newRole = data[i].RoleID;
           }
         }
-
+//writting new entry to employees table
         db.query(
           `INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (${empID},${firstname}, ${lastname}, ${newRole}, ${managerName})`)
         init();
@@ -87,10 +88,12 @@ let addEmployee = () => {
   });
 };
 
-
+//update employees function
 let updateEmployee = () => {
   db.query("SELECT * FROM employee, role", (err, data) => {
     if (err) return err;
+
+    //getting arrays for name options and role options
     let nameOp = [];
     for (let i = 0; i < data.length; i++) {
       nameOp[i] = (data[i].first_name);
@@ -100,7 +103,7 @@ let updateEmployee = () => {
     for (let i = 0; i < data.length; i++) {
       roleOp[i] = (data[i].title);
     }
-
+//Prompting user for which employee to update
     inquirer.prompt([
         {
           type: "list",
@@ -118,23 +121,20 @@ let updateEmployee = () => {
       ])
       .then((answers) => {
         const { employeeName, employeeRole } = answers;
-
+        //get location of employee you wish to update
         const employee = data.find(
           (employee) => employee.FirstName === employeeName
         );
 
         const role = data.find((role) => role.title === employeeRole);
-
+        //error catch
         if (!employee || !role) {
-          console.log("Invalid selection. Please try again.");
+          console.log("Please try again.");
           init();
           return;
         }
-
-        db.query(
-          "UPDATE employee SET RoleID = ? WHERE EmployeeID = ?",
-          [role.RoleID, employee.EmployeeID],
-          (err, results) => {
+        //updating tables
+        db.query(`UPDATE employee SET RoleID = ${role.RoleID} WHERE EmployeeID = ${employee.EmployeeID}`,(err, results) => {
             if (err) return err;
             console.log(results);
             init();
@@ -143,7 +143,7 @@ let updateEmployee = () => {
       });
   });
 };
-
+//view rolls function
 let viewRoles = () => {
   db.query("SELECT * FROM role", function (err, results) {
     if (err) return err;
@@ -151,17 +151,17 @@ let viewRoles = () => {
     init();
   });
 };
-
+//add roles function
 let addRole = () => {
-
+//getting department data
   db.query("SELECT * FROM department", (err, departments) => {
     if (err) return err;
     let depOp = [];
-    
+    //creating department array
     for (let i = 0; i < departments.length; i++){
       depOp[i] = departments[i].name;
     }
-    console.log (depOp);
+    //prompting user 
     inquirer.prompt([
       {
         type: "input",
@@ -182,6 +182,7 @@ let addRole = () => {
       }
     ])
     .then((data) => {
+      //updating roles table
         db.query(`INSERT INTO role (RoleName, RoleSalary, DepartmentID) VALUES ('${data.roleName}, ${data.roleSalary}, ${parseInt(data.departmentName)})`, (err, result) => {
             if (err) return err;
             console.log(result);
@@ -191,7 +192,7 @@ let addRole = () => {
       });
   });
 };
-
+//view department function
 let viewDep = () => {
   db.query("SELECT * FROM department", function (err, results) {
     if (err) return err;
@@ -199,7 +200,7 @@ let viewDep = () => {
     init();
   });
 };
-
+//add department function
 let addDep = () => {
   inquirer
     .prompt([
@@ -219,7 +220,7 @@ let addDep = () => {
     });
 };
 
-
+//main run function
 function init () {
   inquirer.prompt([
     {
@@ -236,6 +237,7 @@ function init () {
       ]
     }])
     .then((data) => {
+      //switch case used to see which option the user wants to do
     switch (data.action) {
         case "view all employees":
             viewEmployee();
@@ -262,7 +264,7 @@ function init () {
   });
 };
 
-
+//run code
 init();
 
 
