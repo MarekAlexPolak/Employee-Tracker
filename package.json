@@ -1,0 +1,35 @@
+{
+    "name": "svg-logo-maker",
+    "version": "1.0.0",
+    "description": "Automated SVG Logo Maker",
+    "main": "index.js",
+    "directories": {
+        "example": "examples",
+        "lib": "lib"
+    },
+    "scripts": {
+        "test": "jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MarekAlexPolak/SVG-Logo-Maker"
+    },
+    "keywords": [],
+    "author": "Marek Polak",
+    "license": "",
+    "bugs": {
+        "url": "https://github.com/MarekAlexPolak/SVG-Logo-Maker"
+    },
+    "homepage": "",
+    "dependencies": {
+        "express": "^4.18.2",
+        "inquirer": "^8.2.5",
+        "install": "^0.13.0",
+        "mysql": "^2.18.1",
+        "mysql2": "^3.3.3",
+        "sql": "^0.78.0"
+    },
+    "devDependencies": {
+        "jest": "^29.5.0"
+    }
+}
